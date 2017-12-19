@@ -1,0 +1,26 @@
+{
+  "name": "Garoonの予定をコピペするやつ",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "description": "自分用",
+  "permissions": [
+    "storage",
+    "https://bozuman.cybozu.com/*",
+        "tabs",
+        "background"
+  ],
+  "content_scripts": [{
+    "matches": ["https://bozuman.cybozu.com/*"],
+    "js": ["script.js","jquery-3.2.1.min.js"]
+  }],
+  "background": {
+    "matches": ["https://bozuman.cybozu.com/*"],
+    "scripts": [
+      "jquery-3.2.1.min.js",
+      "background.js"
+    ]
+  },
+  "browser_action": {
+        "default_title": "action"
+  }
+}

@@ -1,0 +1,31 @@
+{
+    "manifest_version": 2,
+    "name": "daily schedule writer",
+    "description": "DSW",
+    "version": "0.0.1",
+    "browser_action": {
+        "default_icon": "images/icon/icon_19.png"
+    },
+    "icons": {
+        "16": "images/icon/icon_16.png",
+        "48": "images/icon/icon_48.png",
+        "128": "images/icon/icon_128.png"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                ""
+            ],
+            "js": [
+                "js/jquery-3.2.1.min.js","js/script.js"
+            ]
+        }
+    ],
+    "background": {
+        "script": ["js/background.js"]
+    },
+    "permissions": [
+        "tabs",
+        "background"
+    ]
+}

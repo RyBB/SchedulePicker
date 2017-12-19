@@ -2,8 +2,6 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
 
 	// 現在フォーカスが与えられている要素を取得する
 	let active_element = document.activeElement;
-	const ajaxURL = 'https://bozuman.cybozu.com/g/schedule/ajax_event_list.csp';
-	const memberdata = '{"id":"' + 1788 + '","type":"user","selected":true,"colorId":"0"}';
 	let date = new Date();
 
 	// 通常予定
@@ -53,7 +51,7 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
 					schedule[index].end_time = getNormalSche(value["end"]);
 					console.log(schedule[index].start_time)
 					console.log(schedule[index].end_time);
-					return;
+					break;
 				case "repeat":
 					console.log("繰り返し予定です。");
 					var value = $(this).children().children("condition")[0].attributes;
@@ -61,7 +59,7 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
 					schedule[index].end_time = getRepeatSche(value["end_time"]);
 					console.log(schedule[index].start_time);
 					console.log(schedule[index].end_time);
-					return;
+					break;
 				case "banner":
 					console.log("帯予定です。");
 					var value = $(this).children().children("date")[0].attributes;
@@ -70,7 +68,7 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
 					console.log(schedule[index].start_time);
 					console.log(schedule[index].end_time);
 					console.log(schedule[index].detail);
-					return;
+					break;
 			}
 			index = index + 1;
 		});
@@ -98,26 +96,6 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
 		referer_key: "81185dc4a58cf5dbcf1532133cb6d851",
 		use_ajax: "1"
 	}
-
-	/*$.ajax({
-		url: ajaxURL,
-		method: "POST",
-		dataType: "mp4",
-		contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-		headers: {
-			"X-Requested-With": "XMLHttpRequest",
-			"Cache-Control": "no-cache"
-		},
-		data: data
-	}).done(function (result) {
-		let target_area = active_element.id;
-		if (target_area != null) {
-			document.getElementById(target_area).innerHTML = make_text_from_schedule(result);
-		}
-	}).fail(function (result) {
-		console.log("4-2!");
-		console.log(result.members);
-	});;*/
 });
 
 function make_text(schedule) {
@@ -131,8 +109,9 @@ function make_text(schedule) {
 		switch(element.event_type){
 			case "repeat":
 				text = text + '<div class="listTime" style="line-height: 1.2; white-space: nowrap;">'
-				//text = text + pick_date(element.start_time) + "-" + pick_date(element.end_time) + " "; // TODO: 時間を埋める
+				text = text + element.start_time + "-" + element.end_time + " "; 
 				text = text + '<a href = "https://bozuman.cybozu.com/g/schedule/view.csp?event=' + element.id + '" >' + element.detail + "</a>";
+				text = text + '<img src="https://static.cybozu.com/g/F12.0.395_7.11/grn/image/cybozu/repeat16.gif?20171204.text" border="0" style="vertical-align: -3px;">';
 				text = text + "</div>"
 			break;
 			case "normal":
@@ -140,9 +119,8 @@ function make_text(schedule) {
 			  if(element.plan != undefined){
 					text = text + set_plan(element.plan);
 				}
-				//text = text + pick_date(element.start_time) + "-" + pick_date(element.end_time) + " "; // TODO: 時間を埋める
+				text = text + element.start_time + "-" + element.end_time + " "; 
 				text = text + '<a href = "https://bozuman.cybozu.com/g/schedule/view.csp?event=' + element.id + '" >' + element.detail + "</a>";
-				text = text + '<img src="https://static.cybozu.com/g/F12.0.395_7.11/grn/image/cybozu/repeat16.gif?20171204.text" border="0" style="vertical-align: -3px;">';
 				text = text + "</div>"
 			break;
 			case "banner":
@@ -215,28 +193,6 @@ function plan_list(plan){
 	return plan_color;
 }
 
-function make_text_from_schedule(result) {
-	var text = '<div class="user-token-listTime" style="line-height: 1.2;white-space: nowrap;font-size: 13.68px;">'
-
-	text = text + '<div class="user-token-share user-token-normalEventElement   user-token-group_week_calendar_item" style="margin: 0.0px 1.0px 7.0px 3.0px;font-size: 13.68px;">'
-	text = text + "<div>【今日の予定】</div>"
-
-	result.events.by_date[0].events.normal.forEach(function (element) {
-		text = text + "<div>"
-		text = text + pick_date(element.start_date) + "-" + pick_date(element.end_date) + " ";
-		text = text + '<a href = "https://bozuman.cybozu.com/g/schedule/view.csp?event=' + element.id + '" >' + element.detail + "</a>";
-		text = text + "</div>"
-	}, this);
-	text = text + "</div>"
-	return text;
-}
-
-function pick_date(date) {
-	var hour = date.split(" ")[1].split(":")[0];
-	var minute = date.split(" ")[1].split(":")[1];
-	return "" + hour + minute;
-}
-
 function getSchedule(date) {
 	var data = '<?xml version="1.0" encoding="UTF-8"?>';
 	data += '<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope">';
@@ -266,14 +222,14 @@ function getSchedule(date) {
 	data += '  <soap:Body>';
 	data += '    <ScheduleGetEvents>';
 	data += '      <parameters start="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + "T00:00:00" 
-	+ '" end="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + "T23:59:00" +
-//	+ '" start_for_daily="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() +
-//	+ '" end_for_daily="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() +
- '"> </parameters>';
+	+ '" end="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + "T23:59:00"
+	+ '" start_for_daily="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
+	+ '" end_for_daily="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + '"> </parameters>';
 	data += '    </ScheduleGetEvents>';
 	data += '  </soap:Body>';
 	data += '</soap:Envelope>';
 
+	console.log(data);
 	return $.ajax({
 		method: 'POST',
 		url: '/g/cbpapi/schedule/api?',

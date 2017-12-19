@@ -33,7 +33,7 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
 		return input.value;
 	};
 	getSchedule(date).done(function (xml) {
-		var schedule = new Object();
+		var schedule = new Array();
 		var index = 0;
 		$(xml).find("schedule_event").each(function () {
 			schedule[index] = new Object();
@@ -76,11 +76,15 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
 		});
 		console.log("----------------------------------------------------");
 		console.log(schedule);
+		console.log("date:"+date.getDate() );
 		console.log("----------------------------------------------------");
 
 		let target_area = active_element.id;
-		if (target_area != null) {
+		if (target_area != "") {
+			console.log(schedule);
 			document.getElementById(target_area).innerHTML = make_text(schedule);
+		}else{
+			// 転記対象フィールドが指定されていなかった場合の処理を書く
 		}
 	});
 
@@ -117,22 +121,99 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
 });
 
 function make_text(schedule) {
-	var text = '<div class="user-token-listTime" style="line-height: 1.2;white-space: nowrap;font-size: 13.68px;">'
-
-	text = text + '<div class="user-token-share user-token-normalEventElement   user-token-group_week_calendar_item" style="margin: 0.0px 1.0px 7.0px 3.0px;font-size: 13.68px;">'
-	text = text + "<div>【今日の予定】</div>"
+	var html_text = '<div class="user-token-listTime" style="line-height: 1.2;white-space: nowrap;font-size: 13.68px;">'
+	html_text = html_text + '<div class="user-token-share user-token-normalEventElement   user-token-group_week_calendar_item" style="margin: 0.0px 1.0px 7.0px 3.0px;font-size: 13.68px;">'
+	html_text = html_text + "<div>【今日の予定】</div>"
 
 	schedule.forEach(function (element) {
-		text = text + "<div>"
-		text = text + pick_date(element.start_date) + "-" + pick_date(element.end_date) + " ";
-		text = text + '<a href = "https://bozuman.cybozu.com/g/schedule/view.csp?event=' + element.id + '" >' + element.detail + "</a>";
-		text = text + "</div>"
+		text = "";
+		console.log(element);
+		switch(element.event_type){
+			case "repeat":
+				text = text + '<div class="listTime" style="line-height: 1.2; white-space: nowrap;">'
+				//text = text + pick_date(element.start_time) + "-" + pick_date(element.end_time) + " "; // TODO: 時間を埋める
+				text = text + '<a href = "https://bozuman.cybozu.com/g/schedule/view.csp?event=' + element.id + '" >' + element.detail + "</a>";
+				text = text + "</div>"
+			break;
+			case "normal":
+				text = text + '<div class="listTime" style="line-height: 1.2; white-space: nowrap;">'
+			  if(element.plan != undefined){
+					text = text + set_plan(element.plan);
+				}
+				//text = text + pick_date(element.start_time) + "-" + pick_date(element.end_time) + " "; // TODO: 時間を埋める
+				text = text + '<a href = "https://bozuman.cybozu.com/g/schedule/view.csp?event=' + element.id + '" >' + element.detail + "</a>";
+				text = text + '<img src="https://static.cybozu.com/g/F12.0.395_7.11/grn/image/cybozu/repeat16.gif?20171204.text" border="0" style="vertical-align: -3px;">';
+				text = text + "</div>"
+			break;
+			case "banner":
+			break;
+		}
+		html_text = html_text + text;
 	}, this);
-	text = text + "</div>"
-	return text;
+	html_text = html_text + "</div>"
+	return html_text;
 }
 
+function set_plan(plan){
+	plan_color = plan_list(plan);
 
+	plan_text = '<span class="event_color1_grn" style="background-color: rgb('
+	 + plan_color.r + ',' + plan_color.g + ',' + plan_color.b 
+	 + '); display: inline-block; margin-right: 3px; padding: 2px 2px 1px; color: rgb(255, 255, 255); font-size: 11.628px; border-radius: 2px; line-height: 1.1;">'
+	plan_text = plan_text + plan;
+	plan_text = plan_text + '</span>';
+	return plan_text;
+}
+
+function plan_list(plan){
+	plan_color = new Object();
+	plan_color.r = 49;plan_color.g = 130;plan_color.b = 220;
+	switch(plan){
+		//青
+		case "打合":
+		case "会議":
+		plan_color.r = 49;plan_color.g = 130;plan_color.b = 220;
+		break;
+		//水色
+		case "来訪":
+		case "取材/講演":
+		case "【履歴】来訪":
+		plan_color.r = 87;plan_color.g = 179;plan_color.b = 237;
+		break;
+		//オレンジ
+		case "出張":
+		case "ウルトラワーク":
+		plan_color.r = 239;plan_color.g = 146;plan_color.b = 1;
+		break;
+		//赤
+		case "副業":
+		case "休み":
+		plan_color.r = 244;plan_color.g = 72;plan_color.b = 72;
+		break;
+		//ピンク
+		case "往訪":
+		case "【履歴】往訪":
+		plan_color.r = 241;plan_color.g = 148;plan_color.b = 167;
+		break;
+		//紫
+		case "面接":
+		case "フェア":
+		plan_color.r = 181;plan_color.g = 146;plan_color.b = 216;
+		break;
+		//茶色
+		case "勉強会":
+		case "タスク":
+		plan_color.r = 185;plan_color.g = 153;plan_color.b = 118;
+		break;
+		//黒
+		case "説明会":
+		case "セミナー":
+		case "その他":
+		plan_color.r = 153;plan_color.g = 153;plan_color.b = 153;
+		break;
+	}
+	return plan_color;
+}
 
 function make_text_from_schedule(result) {
 	var text = '<div class="user-token-listTime" style="line-height: 1.2;white-space: nowrap;font-size: 13.68px;">'
@@ -184,7 +265,11 @@ function getSchedule(date) {
 	data += '  </soap:Header>';
 	data += '  <soap:Body>';
 	data += '    <ScheduleGetEvents>';
-	data += '      <parameters start="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + "T00:00:00" + '" end="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + "T23:59:00" + '"> </parameters>';
+	data += '      <parameters start="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + "T00:00:00" 
+	+ '" end="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + "T23:59:00" +
+//	+ '" start_for_daily="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() +
+//	+ '" end_for_daily="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() +
+ '"> </parameters>';
 	data += '    </ScheduleGetEvents>';
 	data += '  </soap:Body>';
 	data += '</soap:Envelope>';

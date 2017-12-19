@@ -6,6 +6,20 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
 	const memberdata = '{"id":"' + 1788 + '","type":"user","selected":true,"colorId":"0"}';
 	let date = new Date();
 
+	// ダブルクオートの中身だけ取得する関数
+	var getValue = function(input){
+		var date = new Date(input.value);
+		var year = date.getFullYear();
+		var month = date.getMonth() + 1;
+		var day = date.getDate();
+		var hour = date.getHours();
+		var minute = date.getMinutes();
+
+		console.log("↓↓↓が見る部分です");
+		console.log(year + "年" + month + "月" + day + "日");
+		console.log(hour + "時" + minute + "分")
+	};
+
 
 	getSchedule(date).done(function (xml) {
 		var schedule = new Object();
@@ -20,9 +34,12 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
 			$test = $(this).children().children("datetime")[0];
 			if($test){
 				console.log($(this).children().children("datetime")[0][1]);
-				console.log($(this).children().children("datetime")[0].attr("start"));
+				console.log($(this).children().children("datetime")[0].attributes[0]);
+				var hoge = $(this).children().children("datetime")[0].attributes[0];
+				getValue(hoge);
 			}
 			console.log("----------------------------------------------------");
+
 			schedule[index] = new Object();
 			schedule[index].id = $(this).attr("id");
 			schedule[index].event_type = $(this).attr("event_type");

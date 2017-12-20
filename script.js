@@ -46,6 +46,7 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
 			switch (schedule[index].event_type){
 				case "normal":
 					console.log("通常予定です。")
+					if($(this).children().children("datetime")[0] == undefined)break;
 					var value = $(this).children().children("datetime")[0].attributes;
 					schedule[index].start_time = getNormalSche(value["start"]);
 					schedule[index].end_time = getNormalSche(value["end"]);
@@ -124,11 +125,13 @@ function make_text(schedule) {
 				text = text + "</div>"
 			break;
 			case "banner":
+			//帯予定についての処理を書く
 			break;
 		}
 		html_text = html_text + text;
 	}, this);
-	html_text = html_text + "</div>"
+	html_text = html_text + "</div></div>"
+	console.log(html_text);
 	return html_text;
 }
 

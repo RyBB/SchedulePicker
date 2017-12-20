@@ -1,8 +1,8 @@
 function makehtml(schedule) {
   let date = new Date();
   var html_text = ''
-  html_text += '<div class="user-token-listTime" style="line-height: 1.2;white-space: nowrap;font-size: 13.68px;">'
-	html_text += '<div class="user-token-share user-token-normalEventElement   user-token-group_week_calendar_item" style="margin: 0.0px 1.0px 7.0px 3.0px;font-size: 13.68px;">'
+  //html_text += '<div class="user-token-listTime" style="line-height: 1.2;white-space: nowrap;font-size: 13.68px;">'
+	//html_text += '<div class="user-token-share user-token-normalEventElement   user-token-group_week_calendar_item" style="margin: 0.0px 1.0px 7.0px 3.0px;font-size: 13.68px;">'
 	html_text += "<div>【今日の予定】</div>"
 
 	schedule.forEach(function (element) {
@@ -10,25 +10,30 @@ function makehtml(schedule) {
 		console.log(element);
 		switch(element.event_type){
 			case "repeat":
+				if(element.public_type == "private")break;
 				text = text + '<div class="listTime" style="line-height: 1.2; white-space: nowrap;">'
-				if(element.plan != undefined){
-					text = text + set_plan(element.plan);
-			  }
-				text = text + element.start_time + "-" + element.end_time + " "; 
-				text = text + '<a href = "https://bozuman.cybozu.com/g/schedule/view.csp?event=' + element.id + '" >' + element.detail + "</a>";
-				text = text + '<img src="https://static.cybozu.com/g/F12.0.395_7.11/grn/image/cybozu/repeat16.gif?20171204.text" border="0" style="vertical-align: -3px;">';
-				text = text + "</div>"
-			break;
-			case "normal":
-				text = text + '<div class="listTime" style="line-height: 1.2; white-space: nowrap;">'
-				if(element.start_time == undefined){
+				if(element.all_day == "false"){
+          text = text + element.start_time + "-" + element.end_time + " "; 
+        }else{
           text = text + set_plan("終日");
         }
 			  if(element.plan != undefined){
 					text = text + set_plan(element.plan);
         }
-        if(element.start_time != undefined){
+				text = text + '<a href = "https://bozuman.cybozu.com/g/schedule/view.csp?event=' + element.id + '" >' + element.detail + "</a>";
+				text = text + '<img src="https://static.cybozu.com/g/F12.0.395_7.11/grn/image/cybozu/repeat16.gif?20171204.text" border="0" style="vertical-align: -3px;">';
+				text = text + "</div>"
+			break;
+			case "normal":
+				if(element.public_type == "private")break;
+				text = text + '<div class="listTime" style="line-height: 1.2; white-space: nowrap;">'
+				if(element.all_day == "false"){
           text = text + element.start_time + "-" + element.end_time + " "; 
+        }else{
+          text = text + set_plan("終日");
+        }
+			  if(element.plan != undefined){
+					text = text + set_plan(element.plan);
         }
 				text = text + '<a href = "https://bozuman.cybozu.com/g/schedule/view.csp?event=' + element.id + '" >' + element.detail + "</a>";
 				text = text + "</div>"
@@ -149,7 +154,7 @@ function makehtml2(schedule) {
 		}
 		html_text = html_text + text;
   }, this);
-  html_text = html_text + "</div>"
+  //html_text = html_text + "</div>"
   html_text += '<div class="textarea-resize-cybozu"></div>';
 	console.log(html_text);
 	return html_text;

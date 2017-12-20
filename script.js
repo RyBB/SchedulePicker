@@ -1,10 +1,11 @@
 chrome.extension.onMessage.addListener(function (request, sender, sendResponse) {
 	// 現在フォーカスが与えられている要素を取得する
 	let active_element = document.activeElement;
+	let date = new Date();
 
 	getSchedule(date).done(function (xml) {
 		var schedule = new Array();
-		schedule = formatschedule($(xml));
+		schedule = formatSchedule($(xml));
 
 		let target_area = active_element.id;
 		if (target_area != "") {

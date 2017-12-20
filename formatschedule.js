@@ -1,4 +1,4 @@
-(function(){
+
 	// 通常予定
 	var getNormalSche = function(input){
 		var date = new Date(input.value);
@@ -56,7 +56,7 @@
     //             break;
     //     }
     // };
-    var formatSchedule = function() {
+    var formatSchedule = function(xml) {
         var schedule = new Array();
 		var index = 0;
 		$(xml).find("schedule_event").each(function () {
@@ -98,6 +98,6 @@
                     break;
             }
 			index = index + 1;
-		});
+        });
+        return schedule;
     };
-}());

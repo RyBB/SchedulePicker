@@ -14,9 +14,6 @@ var formatSchedule = function(xml){
 	};
 	// 繰り返し予定の日時処理
 	var getRepeatSche = function(input){
-        if(input === undefined){
-            return;
-        }
         return input.value.slice(0,-3);
         // 以下、日付部分(今後機能追加で使うかも)
 		// var date = new Date();
@@ -27,32 +24,58 @@ var formatSchedule = function(xml){
     // スケジュールのタイプが通常/繰り返し/帯で分岐させる
     var checkScheduleType = function(array, count) {
         switch (array.event_type){
-            case "normal":
-                console.log("通常予定です。")
+            case "normal": {
+                var value = count.children().children("datetime")[0];
                 //終日予定の場合の分岐
-                if(count.children().children("datetime")[0] == undefined) {
+                if(value === undefined) {
+                    array.start_time = undefined;
+                    array.end_time = undefined;
                     break;
                 }
-                var value = count.children().children("datetime")[0].attributes;
-                array.start_time = getNormalSche(value["start"]);
-                array.end_time = getNormalSche(value["end"]);
+                //開始時刻のみ記入されている場合 = start_onry
+                if (value.attributes["end"] === undefined){
+                    array.start_time = getNormalSche(value.attributes["start"]);
+                    array.end_time = " -- : -- ";
+                    break;
+                }
+                // 普通の通常予定の場合
+                array.start_time = getNormalSche(value.attributes["start"]);
+                array.end_time = getNormalSche(value.attributes["end"]);
                 break;
-            case "repeat":
-                console.log("繰り返し予定です。");
-                var value = count.children().children("condition")[0].attributes;
-                array.start_time = getRepeatSche(value["start_time"]);
-                array.end_time = getRepeatSche(value["end_time"]);
+            }
+            case "repeat": {
+                var value = count.children().children("condition")[0];
+                // 繰り返し終日予定の場合
+                if(value.attributes["start_time"] === undefined){
+                    array.start_time = undefined;
+                    array.end_time = undefined;
+                    return;
+                }
+                array.start_time = getRepeatSche(value.attributes["start_time"]);
+                array.end_time = getRepeatSche(value.attributes["end_time"]);
                 break;
-            case "banner":
-                console.log("帯予定です。");
+            }
+            case "banner": {
+            array.start_time = undefined;
+            array.end_time = undefined;
                 break;
+            }
         }
     };
     // スケジュールのソート
     var sortTime = function(array){
         array.sort(function(a,b){
-            if( a.start_time > b.start_time ) return 1;
-            if( a.start_time < b.start_time ) return -1;
+            // 文字列比較のためにUndefinedを文字列に変更
+            if( a.start_time === undefined) a.start_time = "undefined";
+            if( a.start_time > b.start_time ){
+                if( a.start_time === "undefined") a.start_time = undefined;
+                return 1;
+            }
+            if( a.start_time < b.start_time ){
+                if( a.start_time === "undefined") a.start_time = undefined;
+                return -1;
+            }
+            if( a.start_time === "undefined") a.start_time = undefined;
             return 0;
         });
         return array;

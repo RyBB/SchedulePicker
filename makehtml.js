@@ -5,7 +5,10 @@ function makehtml(schedule) {
 	//html_text += '<div class="user-token-share user-token-normalEventElement   user-token-group_week_calendar_item" style="margin: 0.0px 1.0px 7.0px 3.0px;font-size: 13.68px;">'
 	html_text += "<div>【今日の予定】</div>"
 
-	console.log(chrome.storage.sync.get(favoriteColor));
+	chrome.storage.local.get("favoriteColor", function (value) {
+		var value_data = value;
+		console.log(value_data);
+	});
 
 	schedule.forEach(function (element) {
 		text = "";

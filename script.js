@@ -33,7 +33,9 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
 	getSchedule(date).done(function (xml) {
 		var schedule = new Array();
 		var index = 0;
+		console.log($(xml));
 		$(xml).find("schedule_event").each(function () {
+			console.log($(this));
 			schedule[index] = new Object();
 			schedule[index].id = $(this).attr("id");
 			schedule[index].event_type = $(this).attr("event_type");
@@ -86,17 +88,6 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
 			// 転記対象フィールドが指定されていなかった場合の処理を書く
 		}
 	});
-
-	const data = {
-		begin_date: date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate(),
-		number_of_days: "1",
-		uid: "",
-		gid: "selected",
-		selected_group_type: "",
-		"members[]": memberdata,
-		referer_key: "81185dc4a58cf5dbcf1532133cb6d851",
-		use_ajax: "1"
-	}
 });
 
 function make_text(schedule) {
@@ -110,6 +101,9 @@ function make_text(schedule) {
 		switch(element.event_type){
 			case "repeat":
 				text = text + '<div class="listTime" style="line-height: 1.2; white-space: nowrap;">'
+				if(element.plan != undefined){
+					text = text + set_plan(element.plan);
+			  }
 				text = text + element.start_time + "-" + element.end_time + " "; 
 				text = text + '<a href = "https://bozuman.cybozu.com/g/schedule/view.csp?event=' + element.id + '" >' + element.detail + "</a>";
 				text = text + '<img src="https://static.cybozu.com/g/F12.0.395_7.11/grn/image/cybozu/repeat16.gif?20171204.text" border="0" style="vertical-align: -3px;">';
@@ -119,7 +113,7 @@ function make_text(schedule) {
 				text = text + '<div class="listTime" style="line-height: 1.2; white-space: nowrap;">'
 			  if(element.plan != undefined){
 					text = text + set_plan(element.plan);
-				}
+			  }
 				text = text + element.start_time + "-" + element.end_time + " "; 
 				text = text + '<a href = "https://bozuman.cybozu.com/g/schedule/view.csp?event=' + element.id + '" >' + element.detail + "</a>";
 				text = text + "</div>"
@@ -141,8 +135,7 @@ function set_plan(plan){
 	plan_text = '<span class="event_color1_grn" style="background-color: rgb('
 	 + plan_color.r + ',' + plan_color.g + ',' + plan_color.b 
 	 + '); display: inline-block; margin-right: 3px; padding: 2px 2px 1px; color: rgb(255, 255, 255); font-size: 11.628px; border-radius: 2px; line-height: 1.1;">'
-	plan_text = plan_text + plan;
-	plan_text = plan_text + '</span>';
+	plan_text = plan_text + plan + '</span>';
 	return plan_text;
 }
 

@@ -28,28 +28,35 @@ var formatSchedule = function(xml){
     var checkScheduleType = function(array, count) {
         switch (array.event_type){
             case "normal":
-                console.log("通常予定です。")
                 //終日予定の場合の分岐
                 if(count.children().children("datetime")[0] == undefined) {
+                    array.start_time = undefined;
+                    array.end_time = undefined;
                     break;
                 }
                 var value = count.children().children("datetime")[0].attributes;
                 array.start_time = getNormalSche(value["start"]);
+                if (value["end"] === undefined){
+                    array.start_time = undefined;
+                    array.end_time = undefined;
+                    break;
+                }
                 array.end_time = getNormalSche(value["end"]);
                 break;
             case "repeat":
-                console.log("繰り返し予定です。");
                 var value = count.children().children("condition")[0].attributes;
                 array.start_time = getRepeatSche(value["start_time"]);
                 array.end_time = getRepeatSche(value["end_time"]);
                 break;
             case "banner":
-                console.log("帯予定です。");
+            array.start_time = undefined;
+            array.end_time = undefined;
                 break;
         }
     };
     // スケジュールのソート
     var sortTime = function(array){
+        console.log("ソートを開始します")
         array.sort(function(a,b){
             if( a.start_time > b.start_time ) return 1;
             if( a.start_time < b.start_time ) return -1;

@@ -21,13 +21,14 @@ function makehtml(schedule) {
 			break;
 			case "normal":
 				text = text + '<div class="listTime" style="line-height: 1.2; white-space: nowrap;">'
+				if(element.start_time == undefined){
+          text = text + set_plan("終日");
+        }
 			  if(element.plan != undefined){
 					text = text + set_plan(element.plan);
         }
         if(element.start_time != undefined){
           text = text + element.start_time + "-" + element.end_time + " "; 
-        }else{
-          text = text + set_plan("終日");
         }
 				text = text + '<a href = "https://bozuman.cybozu.com/g/schedule/view.csp?event=' + element.id + '" >' + element.detail + "</a>";
 				text = text + "</div>"

@@ -35,7 +35,7 @@ var formatSchedule = function(xml){
                 //開始時刻のみ記入されている場合 = start_onry
                 if (value.attributes["end"] === undefined){
                     array.start_time = getNormalSche(value.attributes["start"]);
-                    array.end_time = " -- : -- ";
+                    array.end_time = undefined;
                     break;
                 }
                 // 普通の通常予定の場合

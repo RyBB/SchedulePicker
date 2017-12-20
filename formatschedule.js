@@ -1,4 +1,5 @@
-	// 現在フォーカスが与えられている要素を取得する
+
+    // 現在フォーカスが与えられている要素を取得する
 	let active_element = document.activeElement;
 	let date = new Date();
 
@@ -75,12 +76,4 @@
 		console.log(schedule);
 		console.log("date:"+date.getDate() );
 		console.log("----------------------------------------------------");
-
-		let target_area = active_element.id;
-		if (target_area != "") {
-			console.log(schedule);
-			document.getElementById(target_area).innerHTML = make_text(schedule);
-		}else{
-			// 転記対象フィールドが指定されていなかった場合の処理を書く
-		}
 	});

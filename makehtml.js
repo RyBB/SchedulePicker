@@ -5,6 +5,11 @@ function makehtml(schedule) {
 	//html_text += '<div class="user-token-share user-token-normalEventElement   user-token-group_week_calendar_item" style="margin: 0.0px 1.0px 7.0px 3.0px;font-size: 13.68px;">'
 	html_text += "<div>【今日の予定】</div>"
 
+	chrome.storage.local.get("favoriteColor", function (value) {
+		var value_data = value;
+		console.log(value_data);
+	});
+
 	schedule.forEach(function (element) {
 		text = "";
 		console.log(element);
@@ -12,11 +17,13 @@ function makehtml(schedule) {
 			case "repeat":
 				if(element.public_type == "private")break;
 				text = text + '<div class="listTime" style="line-height: 1.2; white-space: nowrap;">'
-				if(element.all_day == "false"){
-          text = text + element.start_time + "-" + element.end_time + " "; 
+				if(element.all_day == "true"){
+					text = text + set_plan("終日");
+        }else if(element.end_time == undefined ){
+					text = text + element.start_time + " ";           
         }else{
-          text = text + set_plan("終日");
-        }
+					text = text + element.start_time + "-" + element.end_time + " ";          
+				}
 			  if(element.plan != undefined){
 					text = text + set_plan(element.plan);
         }
@@ -27,11 +34,13 @@ function makehtml(schedule) {
 			case "normal":
 				if(element.public_type == "private")break;
 				text = text + '<div class="listTime" style="line-height: 1.2; white-space: nowrap;">'
-				if(element.all_day == "false"){
-          text = text + element.start_time + "-" + element.end_time + " "; 
+				if(element.all_day == "true"){
+					text = text + set_plan("終日");
+        }else if(element.end_time == undefined ){
+					text = text + element.start_time + " ";           
         }else{
-          text = text + set_plan("終日");
-        }
+					text = text + element.start_time + "-" + element.end_time + " ";          
+				}
 			  if(element.plan != undefined){
 					text = text + set_plan(element.plan);
         }

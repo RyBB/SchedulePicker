@@ -1,4 +1,5 @@
 function makehtml(schedule) {
+  console.log("called");
   let date = new Date();
 	var html_text = '<div class="user-token-listTime" style="line-height: 1.2;white-space: nowrap;font-size: 13.68px;">'
 	html_text = html_text + '<div class="user-token-share user-token-normalEventElement   user-token-group_week_calendar_item" style="margin: 0.0px 1.0px 7.0px 3.0px;font-size: 13.68px;">'
@@ -96,50 +97,4 @@ function plan_list(plan){
 		break;
 	}
 	return plan_color;
-}
-
-function getSchedule(date) {
-	var data = '<?xml version="1.0" encoding="UTF-8"?>';
-	data += '<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope">';
-	data += '  <soap:Header>';
-	data += '    <Action>';
-	data += 'ScheduleGetEvents';
-	data += '    </Action>';
-	data += '    <Security>';
-	// 更新系のAPIはリクエストトークンもしくはアカウント、パスワードの指定が必要です。
-	// https://cybozudev.zendesk.com/hc/ja/articles/202228464#step8
-	//
-	// リクエストトークンの必要なAPIの一覧はこちらです。
-	// https://cybozudev.zendesk.com/hc/ja/articles/202686190
-	//
-	// 今回はスケジュールの取得なので不要です。
-	data += '      <UsernameToken>';
-	data += '        <Username></Username>';
-	data += '        <Password></Password>';
-	data += '      </UsernameToken>';
-	data += '    </Security>';
-	data += '    <Timestamp>';
-	data += '      <Created>2010-08-12T14:45:00Z</Created>';
-	data += '      <Expires>2037-08-12T14:45:00Z</Expires>';
-	data += '    </Timestamp>';
-	data += '    <Locale>jp</Locale>';
-	data += '  </soap:Header>';
-	data += '  <soap:Body>';
-	data += '    <ScheduleGetEvents>';
-	data += '      <parameters start="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + "T00:00:00" 
-	+ '" end="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + "T23:59:00"
-	+ '" start_for_daily="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
-	+ '" end_for_daily="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + '"> </parameters>';
-	data += '    </ScheduleGetEvents>';
-	data += '  </soap:Body>';
-	data += '</soap:Envelope>';
-
-	console.log(data);
-	return $.ajax({
-		method: 'POST',
-		url: '/g/cbpapi/schedule/api?',
-		data: data,
-		dataType: 'xml',
-		contentType: 'text/xml'
-	});
 }

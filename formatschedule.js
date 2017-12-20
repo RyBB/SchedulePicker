@@ -15,7 +15,7 @@ var formatSchedule = function(xml){
 	// 繰り返し予定の日時処理
 	var getRepeatSche = function(input){
         if(input === undefined){
-            return null;
+            return;
         }
         return input.value.slice(0,-3);
         // 以下、日付部分(今後機能追加で使うかも)

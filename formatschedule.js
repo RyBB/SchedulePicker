@@ -73,6 +73,5 @@ var formatSchedule = function(xml){
         });
         return sortTime(schedule);
     }
-    var schedule = setSchedule();
-    return schedule;
+    return setSchedule();
 }

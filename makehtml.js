@@ -1,9 +1,9 @@
 function makehtml(schedule) {
-  console.log("called");
   let date = new Date();
-	var html_text = '<div class="user-token-listTime" style="line-height: 1.2;white-space: nowrap;font-size: 13.68px;">'
-	html_text = html_text + '<div class="user-token-share user-token-normalEventElement   user-token-group_week_calendar_item" style="margin: 0.0px 1.0px 7.0px 3.0px;font-size: 13.68px;">'
-	html_text = html_text + "<div>【今日の予定】</div>"
+  var html_text = ''
+  html_text += '<div class="user-token-listTime" style="line-height: 1.2;white-space: nowrap;font-size: 13.68px;">'
+	html_text += '<div class="user-token-share user-token-normalEventElement   user-token-group_week_calendar_item" style="margin: 0.0px 1.0px 7.0px 3.0px;font-size: 13.68px;">'
+	html_text += "<div>【今日の予定】</div>"
 
 	schedule.forEach(function (element) {
 		text = "";
@@ -23,8 +23,12 @@ function makehtml(schedule) {
 				text = text + '<div class="listTime" style="line-height: 1.2; white-space: nowrap;">'
 			  if(element.plan != undefined){
 					text = text + set_plan(element.plan);
-			  }
-				text = text + element.start_time + "-" + element.end_time + " "; 
+        }
+        if(element.start_time != undefined){
+          text = text + element.start_time + "-" + element.end_time + " "; 
+        }else{
+          text = text + set_plan("終日");
+        }
 				text = text + '<a href = "https://bozuman.cybozu.com/g/schedule/view.csp?event=' + element.id + '" >' + element.detail + "</a>";
 				text = text + "</div>"
 			break;
@@ -33,8 +37,9 @@ function makehtml(schedule) {
 			break;
 		}
 		html_text = html_text + text;
-	}, this);
-	html_text = html_text + "</div></div>"
+  }, this);
+  html_text = html_text + "</div></div>"
+  html_text += '<div class="textarea-resize-cybozu"></div>';
 	console.log(html_text);
 	return html_text;
 }
@@ -45,7 +50,7 @@ function set_plan(plan){
 	plan_text = '<span class="event_color1_grn" style="background-color: rgb('
 	 + plan_color.r + ',' + plan_color.g + ',' + plan_color.b 
 	 + '); display: inline-block; margin-right: 3px; padding: 2px 2px 1px; color: rgb(255, 255, 255); font-size: 11.628px; border-radius: 2px; line-height: 1.1;">'
-	plan_text = plan_text + plan + '</span>';
+	plan_text += plan + '</span>';
 	return plan_text;
 }
 
@@ -95,6 +100,56 @@ function plan_list(plan){
 		case "その他":
 		plan_color.r = 153;plan_color.g = 153;plan_color.b = 153;
 		break;
+		//黒
+		case "終日":
+		plan_color.r = 50;plan_color.g = 205;plan_color.b = 50;
+		break;
 	}
 	return plan_color;
+}
+
+
+
+function makehtml2(schedule) {
+  let date = new Date();
+  var html_text = ''
+ 	html_text += "<div>【今日の予定】</div>"
+
+	schedule.forEach(function (element) {
+    text = "";
+    text += '<div class="normal normalEventElement   group_week_calendar_item" style="margin: 0px 1px 12px 3px; font-size: 13.68px; color: rgb(34, 34, 34); font-family: &quot;ヒラギノ角ゴ ProN W3&quot;, &quot;Hiragino Kaku Gothic ProN&quot;, メイリオ, Meiryo, &quot;MS PGothic&quot;, &quot;ＭＳ Ｐゴシック&quot;, sans-serif;">'
+		switch(element.event_type){
+			case "repeat":
+				text = text + '<div class="listTime" style="line-height: 1.2; white-space: nowrap;">'
+				if(element.plan != undefined){
+					text = text + set_plan(element.plan);
+			  }
+				text = text + element.start_time + "-" + element.end_time + " "; 
+				text = text + '<a href = "https://bozuman.cybozu.com/g/schedule/view.csp?event=' + element.id + '" >' + element.detail + "</a>";
+				text = text + '<img src="https://static.cybozu.com/g/F12.0.395_7.11/grn/image/cybozu/repeat16.gif?20171204.text" border="0" style="vertical-align: -3px;">';
+				text = text + "</div>"
+			break;
+			case "normal":
+				text = text + '<div class="listTime" style="line-height: 1.2; white-space: nowrap;">'
+			  if(element.plan != undefined){
+					text = text + set_plan(element.plan);
+        }
+        if(element.start_time != undefined){
+          text = text + element.start_time + "-" + element.end_time + " "; 
+        }else{
+          text = text + "終日予定 "; //TODO: 要検討 
+        }
+				text = text + '<a href = "https://bozuman.cybozu.com/g/schedule/view.csp?event=' + element.id + '" >' + element.detail + "</a>";
+				text = text + "</div>"
+			break;
+			case "banner":
+			//帯予定についての処理を書く
+			break;
+		}
+		html_text = html_text + text;
+  }, this);
+  html_text = html_text + "</div>"
+  html_text += '<div class="textarea-resize-cybozu"></div>';
+	console.log(html_text);
+	return html_text;
 }

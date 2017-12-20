@@ -3,6 +3,11 @@
   "version": "0.0.1",
   "manifest_version": 2,
   "description": "自分用",
+  "icons": {
+    "16": "Artboard@2x.png",
+    "48": "Artboard@10x.png",
+    "128": "Artboard@10x.png"
+  },
   "permissions": [
     "storage",
     "https://bozuman.cybozu.com/*",

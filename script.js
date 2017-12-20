@@ -31,7 +31,7 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
 		return input.value;
 	};
 	getSchedule(date).done(function (xml) {
-		var schedule = new Object();
+		var schedule = new Array();
 		var index = 0;
 		$(xml).find("schedule_event").each(function () {
 			schedule[index] = new Object();
@@ -74,11 +74,15 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
 		});
 		console.log("----------------------------------------------------");
 		console.log(schedule);
+		console.log("date:"+date.getDate() );
 		console.log("----------------------------------------------------");
 
 		let target_area = active_element.id;
-		if (target_area != null) {
+		if (target_area != "") {
+			console.log(schedule);
 			document.getElementById(target_area).innerHTML = make_text(schedule);
+		}else{
+			// 転記対象フィールドが指定されていなかった場合の処理を書く
 		}
 	});
 
@@ -95,10 +99,9 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
 });
 
 function make_text(schedule) {
-	var text = '<div class="user-token-listTime" style="line-height: 1.2;white-space: nowrap;font-size: 13.68px;">'
-
-	text = text + '<div class="user-token-share user-token-normalEventElement   user-token-group_week_calendar_item" style="margin: 0.0px 1.0px 7.0px 3.0px;font-size: 13.68px;">'
-	text = text + "<div>【今日の予定】</div>"
+	var html_text = '<div class="user-token-listTime" style="line-height: 1.2;white-space: nowrap;font-size: 13.68px;">'
+	html_text = html_text + '<div class="user-token-share user-token-normalEventElement   user-token-group_week_calendar_item" style="margin: 0.0px 1.0px 7.0px 3.0px;font-size: 13.68px;">'
+	html_text = html_text + "<div>【今日の予定】</div>"
 
 	schedule.forEach(function (element) {
 		text = "";
@@ -125,11 +128,70 @@ function make_text(schedule) {
 		}
 		html_text = html_text + text;
 	}, this);
-	text = text + "</div>"
-	return text;
+	html_text = html_text + "</div>"
+	return html_text;
 }
 
+function set_plan(plan){
+	plan_color = plan_list(plan);
 
+	plan_text = '<span class="event_color1_grn" style="background-color: rgb('
+	 + plan_color.r + ',' + plan_color.g + ',' + plan_color.b 
+	 + '); display: inline-block; margin-right: 3px; padding: 2px 2px 1px; color: rgb(255, 255, 255); font-size: 11.628px; border-radius: 2px; line-height: 1.1;">'
+	plan_text = plan_text + plan;
+	plan_text = plan_text + '</span>';
+	return plan_text;
+}
+
+function plan_list(plan){
+	plan_color = new Object();
+	plan_color.r = 49;plan_color.g = 130;plan_color.b = 220;
+	switch(plan){
+		//青
+		case "打合":
+		case "会議":
+		plan_color.r = 49;plan_color.g = 130;plan_color.b = 220;
+		break;
+		//水色
+		case "来訪":
+		case "取材/講演":
+		case "【履歴】来訪":
+		plan_color.r = 87;plan_color.g = 179;plan_color.b = 237;
+		break;
+		//オレンジ
+		case "出張":
+		case "ウルトラワーク":
+		plan_color.r = 239;plan_color.g = 146;plan_color.b = 1;
+		break;
+		//赤
+		case "副業":
+		case "休み":
+		plan_color.r = 244;plan_color.g = 72;plan_color.b = 72;
+		break;
+		//ピンク
+		case "往訪":
+		case "【履歴】往訪":
+		plan_color.r = 241;plan_color.g = 148;plan_color.b = 167;
+		break;
+		//紫
+		case "面接":
+		case "フェア":
+		plan_color.r = 181;plan_color.g = 146;plan_color.b = 216;
+		break;
+		//茶色
+		case "勉強会":
+		case "タスク":
+		plan_color.r = 185;plan_color.g = 153;plan_color.b = 118;
+		break;
+		//黒
+		case "説明会":
+		case "セミナー":
+		case "その他":
+		plan_color.r = 153;plan_color.g = 153;plan_color.b = 153;
+		break;
+	}
+	return plan_color;
+}
 
 function getSchedule(date) {
 	var data = '<?xml version="1.0" encoding="UTF-8"?>';

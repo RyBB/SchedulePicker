@@ -3,21 +3,32 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
 	let active_element = document.activeElement;
 	let date = new Date();
 
-	getSchedule(date).done(function (xml) {
+	getSchedule(date, request).done(function (xml) {
 		var schedule = new Array();
 		schedule = formatSchedule($(xml));
 
 		let target_area = active_element.id;
 		if (target_area != "") {
-			console.log(schedule);
-			document.getElementById(target_area).innerHTML = makehtml(schedule);
+			console.log(document.getElementById(target_area));
+			if(request == "Today"){
+				document.getElementById(target_area).innerHTML = document.getElementById(target_area).innerHTML + makehtml(schedule, request);
+			}else if(request == "Tommorow"){
+				document.getElementById(target_area).innerHTML = document.getElementById(target_area).innerHTML + makehtml(schedule, request);
+			}else{
+				document.getElementById(target_area).innerHTML = makehtml(schedule, request);
+			}
 		}else{
 			// 転記対象フィールドが指定されていなかった場合の処理を書く
 		}
 	});
 });
 
-function getSchedule(date) {
+function getSchedule(date, request) {
+	day_count = 0;
+	if(request == "Today"){day_count = 0;}
+	else if(request == "Tommorow"){day_count = 1;}
+	else{ day_count = 0; }
+
 	var data = '<?xml version="1.0" encoding="UTF-8"?>';
 	data += '<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope">';
 	data += '  <soap:Header>';
@@ -45,10 +56,10 @@ function getSchedule(date) {
 	data += '  </soap:Header>';
 	data += '  <soap:Body>';
 	data += '    <ScheduleGetEvents>';
-	data += '      <parameters start="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + "T00:00:00" 
-	+ '" end="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + "T23:59:00"
-	+ '" start_for_daily="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
-	+ '" end_for_daily="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + '"> </parameters>';
+	data += '      <parameters start="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" +  (date.getDate() + day_count) + "T00:00:00" 
+	+ '" end="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + (date.getDate() + day_count) + "T23:59:00"
+	+ '" start_for_daily="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + (date.getDate() + day_count)
+	+ '" end_for_daily="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + (date.getDate() + day_count) + '"> </parameters>';
 	data += '    </ScheduleGetEvents>';
 	data += '  </soap:Body>';
 	data += '</soap:Envelope>';

@@ -12,7 +12,7 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
 			console.log(document.getElementById(target_area));
 			if(request == "Today"){
 				document.getElementById(target_area).innerHTML = document.getElementById(target_area).innerHTML + makehtml(schedule, request);
-			}else if(request == "Tommorow"){
+			}else if(request == "Tomorrow"){
 				document.getElementById(target_area).innerHTML = document.getElementById(target_area).innerHTML + makehtml(schedule, request);
 			}else{
 				document.getElementById(target_area).innerHTML = makehtml(schedule, request);
@@ -26,7 +26,7 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
 function getSchedule(date, request) {
 	day_count = 0;
 	if(request == "Today"){day_count = 0;}
-	else if(request == "Tommorow"){day_count = 1;}
+	else if(request == "Tomorrow"){day_count = 1;}
 	else{ day_count = 0; }
 
 	var data = '<?xml version="1.0" encoding="UTF-8"?>';
@@ -56,7 +56,7 @@ function getSchedule(date, request) {
 	data += '  </soap:Header>';
 	data += '  <soap:Body>';
 	data += '    <ScheduleGetEvents>';
-	data += '      <parameters start="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" +  (date.getDate() + day_count) + "T00:00:00" 
+	data += '      <parameters start="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" +  (date.getDate() + day_count) + "T00:00:00"
 	+ '" end="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + (date.getDate() + day_count) + "T23:59:00"
 	+ '" start_for_daily="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + (date.getDate() + day_count)
 	+ '" end_for_daily="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + (date.getDate() + day_count) + '"> </parameters>';

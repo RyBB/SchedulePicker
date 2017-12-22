@@ -4,7 +4,7 @@ function makehtml(schedule, request) {
   //html_text += '<div class="user-token-listTime" style="line-height: 1.2;white-space: nowrap;font-size: 13.68px;">'
 	//html_text += '<div class="user-token-share user-token-normalEventElement   user-token-group_week_calendar_item" style="margin: 0.0px 1.0px 7.0px 3.0px;font-size: 13.68px;">'
 	if(request == "Today"){html_text += "<div>【今日の予定】</div>"}
-	else if(request == "Tommorow"){html_text += "<div>【明日の予定】</div>"}
+	else if(request == "Tomorrow"){html_text += "<div>【明日の予定】</div>"}
 	else {html_text += "<div>【今日の予定】</div>"}
 
 	chrome.storage.local.get("favoriteColor", function (value) {
@@ -20,9 +20,9 @@ function makehtml(schedule, request) {
 				if(element.all_day == "true"){
 					text = text + set_plan("終日");
         }else if(element.end_time == undefined ){
-					text = text + element.start_time + " ";           
+					text = text + element.start_time + " ";
         }else{
-					text = text + element.start_time + "-" + element.end_time + " ";          
+					text = text + element.start_time + "-" + element.end_time + " ";
 				}
 			  if(element.plan != undefined){
 					text = text + set_plan(element.plan);
@@ -37,9 +37,9 @@ function makehtml(schedule, request) {
 				if(element.all_day == "true"){
 					text = text + set_plan("終日");
         }else if(element.end_time == undefined ){
-					text = text + element.start_time + " ";           
+					text = text + element.start_time + " ";
         }else{
-					text = text + element.start_time + "-" + element.end_time + " ";          
+					text = text + element.start_time + "-" + element.end_time + " ";
 				}
 			  if(element.plan != undefined){
 					text = text + set_plan(element.plan);
@@ -62,7 +62,7 @@ function set_plan(plan){
 	plan_color = plan_list(plan);
 
 	plan_text = '<span class="event_color1_grn" style="background-color: rgb('
-	 + plan_color.r + ',' + plan_color.g + ',' + plan_color.b 
+	 + plan_color.r + ',' + plan_color.g + ',' + plan_color.b
 	 + '); display: inline-block; margin-right: 3px; padding: 2px 2px 1px; color: rgb(255, 255, 255); font-size: 11.628px; border-radius: 2px; line-height: 1.1;">'
 	plan_text += plan + '</span>';
 	return plan_text;
@@ -138,7 +138,7 @@ function makehtml2(schedule) {
 				if(element.plan != undefined){
 					text = text + set_plan(element.plan);
 			  }
-				text = text + element.start_time + "-" + element.end_time + " "; 
+				text = text + element.start_time + "-" + element.end_time + " ";
 				text = text + '<a href = "https://bozuman.cybozu.com/g/schedule/view.csp?event=' + element.id + '" >' + element.detail + "</a>";
 				text = text + '<img src="https://static.cybozu.com/g/F12.0.395_7.11/grn/image/cybozu/repeat16.gif?20171204.text" border="0" style="vertical-align: -3px;">';
 				text = text + "</div>"
@@ -149,9 +149,9 @@ function makehtml2(schedule) {
 					text = text + set_plan(element.plan);
         }
         if(element.start_time != undefined){
-          text = text + element.start_time + "-" + element.end_time + " "; 
+          text = text + element.start_time + "-" + element.end_time + " ";
         }else{
-          text = text + "終日予定 "; //TODO: 要検討 
+          text = text + "終日予定 "; //TODO: 要検討
         }
 				text = text + '<a href = "https://bozuman.cybozu.com/g/schedule/view.csp?event=' + element.id + '" >' + element.detail + "</a>";
 				text = text + "</div>"

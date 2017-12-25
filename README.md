@@ -1,5 +1,6 @@
-# Schedule Picker
+# Schedule Picker Dev.ver
 - スケピ
+- 開発環境バージョン
 
 ## 説明
 - ガルーンの今日のスケジュール情報を取得して、kintoneスレッドなどに挿入するChrome拡張です。

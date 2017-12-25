@@ -62,24 +62,34 @@ var formatSchedule = function(xml){
             }
         }
     };
-    // スケジュールのソート
-    var sortTime = function(array){
-        array.sort(function(a,b){
-            // 文字列比較のためにUndefinedを文字列に変更
-            if( a.start_time === undefined) a.start_time = "undefined";
-            if( a.start_time > b.start_time ){
-                if( a.start_time === "undefined") a.start_time = undefined;
-                return 1;
-            }
-            if( a.start_time < b.start_time ){
-                if( a.start_time === "undefined") a.start_time = undefined;
-                return -1;
-            }
-            if( a.start_time === "undefined") a.start_time = undefined;
-            return 0;
-        });
-        return array;
+   // 文字列比較のためにUndefinedを文字列に変更
+   var setUndefined = function (a, b) {
+    if (a.start_time === undefined) {
+        a.start_time = "undefined";
     }
+    if (b.start_time === undefined) {
+        b.start_time = "undefined";
+    }
+};
+// スケジュールのソート
+var sortTime = function (array) {
+    array.sort(function (a, b) {
+        setUndefined(a, b);
+
+        // 比較
+        if (a.start_time > b.start_time) {
+            setUndefined(a, b);
+            return 1;
+        }
+        if (a.start_time < b.start_time) {
+            setUndefined(a, b);
+            return -1;
+        }
+        setUndefined(a, b);
+        return 0;
+    });
+    return array;
+};
     // メインの処理
     var setSchedule = function(){
         var schedule = new Array();

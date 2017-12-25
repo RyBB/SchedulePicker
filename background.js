@@ -24,7 +24,7 @@ chrome.contextMenus.create({
 	"contexts" : ["all"],
 	"parentId": parentId,
 	"onclick" : ClickTommrow(),
-	"id": "tomorrow_id"
+	"id": "Tomorrow_id"
 });
 
 function ClickToday() {

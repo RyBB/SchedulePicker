@@ -56,7 +56,7 @@ function getSchedule(date, request) {
 	data += '  </soap:Header>';
 	data += '  <soap:Body>';
 	data += '    <ScheduleGetEvents>';
-	data += '      <parameters start="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" +  (date.getDate() + day_count) + "T00:00:00" 
+	data += '      <parameters start="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" +  (date.getDate() + day_count) + "T00:00:00"
 	+ '" end="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + (date.getDate() + day_count) + "T23:59:00"
 	+ '" start_for_daily="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + (date.getDate() + day_count)
 	+ '" end_for_daily="' + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + (date.getDate() + day_count) + '"> </parameters>';

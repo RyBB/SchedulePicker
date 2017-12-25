@@ -12,7 +12,7 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
 			console.log(document.getElementById(target_area));
 			if(request == "Today"){
 				document.getElementById(target_area).innerHTML = document.getElementById(target_area).innerHTML + makehtml(schedule, request);
-			}else if(request == "Tommorow"){
+			}else if(request == "Tomorrow"){
 				document.getElementById(target_area).innerHTML = document.getElementById(target_area).innerHTML + makehtml(schedule, request);
 			}else{
 				document.getElementById(target_area).innerHTML = makehtml(schedule, request);
@@ -26,7 +26,7 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
 function getSchedule(date, request) {
 	day_count = 0;
 	if(request == "Today"){day_count = 0;}
-	else if(request == "Tommorow"){day_count = 1;}
+	else if(request == "Tomorrow"){day_count = 1;}
 	else{ day_count = 0; }
 
 	var data = '<?xml version="1.0" encoding="UTF-8"?>';

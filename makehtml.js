@@ -4,7 +4,7 @@ function makehtml(schedule, request) {
   //html_text += '<div class="user-token-listTime" style="line-height: 1.2;white-space: nowrap;font-size: 13.68px;">'
 	//html_text += '<div class="user-token-share user-token-normalEventElement   user-token-group_week_calendar_item" style="margin: 0.0px 1.0px 7.0px 3.0px;font-size: 13.68px;">'
 	if(request == "Today"){html_text += "<div>【今日の予定】</div>"}
-	else if(request == "Tommorow"){html_text += "<div>【明日の予定】</div>"}
+	else if(request == "Tomorrow"){html_text += "<div>【明日の予定】</div>"}
 	else {html_text += "<div>【今日の予定】</div>"}
 
 	chrome.storage.local.get("favoriteColor", function (value) {

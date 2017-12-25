@@ -19,12 +19,12 @@ chrome.contextMenus.create({
 });
 
 chrome.contextMenus.create({
-	"title" : "Tommorow",
+	"title" : "Tomorrow",
 	"type" : "normal",
 	"contexts" : ["all"],
 	"parentId": parentId,
 	"onclick" : ClickTommrow(),
-	"id": "tommorow_id"
+	"id": "Tomorrow_id"
 });
 
 function ClickToday() {
@@ -35,6 +35,6 @@ function ClickToday() {
 
 function ClickTommrow() {
 	return function(info, tab) {
-		chrome.tabs.sendMessage(tab.id, "Tommorow");
+		chrome.tabs.sendMessage(tab.id, "Tomorrow");
 	};
 };

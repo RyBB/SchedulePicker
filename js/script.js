@@ -7,25 +7,24 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
 		let date = moment();
 		let today = date.format("YYYY-MM-DD");
 		let tomorrow = moment(today).add(1, 'd').format("YYYY-MM-DD");
-		console.log(moment().day(3));
 		let selected_date = items.select;
 		if ( request === "Today"){}
 		else if (request === "Tomorrow"){date = moment(today).add(1, 'd')}
 		else {date = moment(selected_date);}
-		console.log(date);
 		getSchedule(date, request).done(function (xml) {
 			var schedule = new Array();
 			schedule = formatSchedule($(xml));
+			type = items.secret;
 
 			let target_area = active_element.id;
 			if (target_area != "") {
 				console.log(document.getElementById(target_area));
 				if (request == "Today") {
-					document.getElementById(target_area).innerHTML = document.getElementById(target_area).innerHTML + makehtml(schedule, request, today);
+					document.getElementById(target_area).innerHTML = document.getElementById(target_area).innerHTML + makehtml(schedule, type, today);
 				} else if (request == "Tomorrow") {
-					document.getElementById(target_area).innerHTML = document.getElementById(target_area).innerHTML + makehtml(schedule, request, tomorrow);
+					document.getElementById(target_area).innerHTML = document.getElementById(target_area).innerHTML + makehtml(schedule, type, tomorrow);
 				} else {
-					document.getElementById(target_area).innerHTML = document.getElementById(target_area).innerHTML + makehtml(schedule, request, selected_date);
+					document.getElementById(target_area).innerHTML = document.getElementById(target_area).innerHTML + makehtml(schedule, type, selected_date);
 				}
 			} else {
 				// 転記対象フィールドが指定されていなかった場合の処理を書く

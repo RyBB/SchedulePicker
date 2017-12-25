@@ -1,5 +1,4 @@
 var formatSchedule = function(xml){
-
 	// 通常予定の日時処理
 	var getNormalSche = function(input){
         var date = new Date(input.value);

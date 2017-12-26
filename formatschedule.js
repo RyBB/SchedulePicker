@@ -65,34 +65,63 @@ var formatSchedule = function (xml) {
                 }
         }
     };
-    // 文字列比較のためにUndefinedを文字列に変更
-    var setUndefined = function (a, b) {
-        if (a.start_time === undefined) {
-            a.start_time = "undefined";
+        // 文字列比較のためにUndefinedを文字列に変更
+        var setUndefined = function (a, b) {
+            if (a.start_time === undefined) {
+                a.start_time = "undefined";
+            }
+            if (b.start_time === undefined) {
+                b.start_time = "undefined";
+            }
+            if (a.end_time === undefined) {
+                a.end_time = "undefined";
+            }
+            if (b.end_time === undefined) {
+                b.end_time = "undefined";
+            }
         }
-        if (b.start_time === undefined) {
-            b.start_time = "undefined";
+        // Undefinedを元に戻す
+        var resetUndefined = function (a, b) {
+            if (a.start_time === "undefined") {
+                a.start_time = undefined;
+            }
+            if (b.start_time === "undefined") {
+                b.start_time = undefined;
+            }
+            if (a.end_time === "undefined") {
+                a.end_time = undefined;
+            }
+            if (b.end_time === "undefined") {
+                b.end_time = undefined;
+            }
         }
-    };
-    // スケジュールのソート
-    var sortTime = function (array) {
-        array.sort(function (a, b) {
-            setUndefined(a, b);
+        // スケジュールのソート
+        var sortTime = function (array) {
+            array.sort(function (a, b) {
+                setUndefined(a, b);
 
-            // 比較
-            if (a.start_time > b.start_time) {
-                setUndefined(a, b);
-                return 1;
-            }
-            if (a.start_time < b.start_time) {
-                setUndefined(a, b);
-                return -1;
-            }
-            setUndefined(a, b);
-            return 0;
-        });
-        return array;
-    };
+                // 比較
+                if (a.start_time > b.start_time) {
+                    resetUndefined(a, b);
+                    return 1;
+                }
+                if (a.start_time < b.start_time) {
+                    resetUndefined(a, b);
+                    return -1;
+                }
+                if (a.end_time > b.end_time) {
+                    resetUndefined(a, b);
+                    return 1;
+                }
+                if (a.end_time < b.end_time) {
+                    resetUndefined(a, b);
+                    return -1;
+                }
+                resetUndefined(a, b);
+                return 0;
+            });
+            return array;
+        };
     // メインの処理
     var setSchedule = function () {
         var schedule = new Array();

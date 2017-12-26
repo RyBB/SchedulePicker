@@ -3,7 +3,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 });
 
 var parentId = chrome.contextMenus.create({
-	"title" : "schedule picker",
+	"title" : "SchedulePicker",
 	"type" : "normal",
 	"contexts" : ["all"],
 	"id": "parent_id"

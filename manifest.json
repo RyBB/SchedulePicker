@@ -38,7 +38,7 @@
     "open_in_tab": true
   },
   "browser_action": {
-    "default_title": "PostDailyReport",
+    "default_title": "SchedulePicker",
     "default_popup": "popup/popup.html"
   }
 }

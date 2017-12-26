@@ -3,46 +3,49 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
 
 		// 現在フォーカスが与えられている要素を取得する
 		let active_element = document.activeElement;
-		// let date = new Date;
+
+		// 日付処理
 		let date = moment();
 		let today = date.format("YYYY-MM-DD");
 		let tomorrow = moment(today).add(1, 'd').format("YYYY-MM-DD");
+
+		// オプション画面の日付情報を取得
 		let selected_date = items.select;
+
+		//date変数にそれぞれの場合の日付を代入
 		if ( request === "Today"){}
 		else if (request === "Tomorrow"){date = moment(today).add(1, 'd')}
 		else {date = moment(selected_date);}
+
+		//SOAPで取得したスケジュール情報XMLをもとに処理を行う
 		getSchedule(date, request).done(function (xml) {
 			var schedule = new Array();
 			schedule = formatSchedule($(xml));
+
+			// オプション画面の非公開予定の値
 			type = items.secret;
 
+			// フォーカスしている部分を取得
 			let target_area = active_element.id;
-			if (target_area != "") {
-				console.log(document.getElementById(target_area));
-				if (request == "Today") {
-					document.getElementById(target_area).innerHTML = document.getElementById(target_area).innerHTML + makehtml(schedule, type, today);
-				} else if (request == "Tomorrow") {
-					document.getElementById(target_area).innerHTML = document.getElementById(target_area).innerHTML + makehtml(schedule, type, tomorrow);
-				} else {
-					document.getElementById(target_area).innerHTML = document.getElementById(target_area).innerHTML + makehtml(schedule, type, selected_date);
-				}
+			ta = document.getElementById(target_area);
+
+			// フォーカスしていなかったら処理をやめる
+			if (target_area === "") {
+				return;
+			}
+			// スケジュールの挿入部分
+			if (request == "Today") {
+				ta.innerHTML = ta.lastChild.innerHTML + makehtml(schedule, type, today);
+			} else if (request == "Tomorrow") {
+				ta.innerHTML = ta.innerHTML + makehtml(schedule, type, tomorrow);
 			} else {
-				// 転記対象フィールドが指定されていなかった場合の処理を書く
+				ta.innerHTML = ta.innerHTML + makehtml(schedule, type, selected_date);
 			}
 		});
 	});
 });
 
 function getSchedule(date, request) {
-	// day_count = 0;
-	// if (request == "Today") {
-	// 	day_count = 0;
-	// } else if (request == "Tomorrow") {
-	// 	day_count = 1;
-	// } else {
-	// 	 = 0;
-	// }
-
 	var data = '<?xml version="1.0" encoding="UTF-8"?>';
 	data += '<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope">';
 	data += '  <soap:Header>';

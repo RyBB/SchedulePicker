@@ -1,12 +1,12 @@
 {
-  "name": "Schedule Picker",
-  "version": "1.0.1",
+  "name": "Schedule Picker Dev.ver",
+  "version": "1.1.0",
   "manifest_version": 2,
   "description": "ハッカソン2017",
   "icons": {
-    "16": "Artboard-n@2x.png",
-    "48": "Artboard-n@2x.png",
-    "128": "Artboard-n@2x.png"
+    "16": "icons/Artboard-n@2x.png",
+    "48": "icons/Artboard-n@2x.png",
+    "128": "icons/Artboard-n@2x.png"
   },
   "permissions": [
     "storage",
@@ -17,16 +17,28 @@
   ],
   "content_scripts": [{
     "matches": ["https://bozuman.cybozu.com/*"],
-    "js": ["formatschedule.js", "makehtml.js", "script.js","jquery-3.2.1.min.js"]
+    "js": [
+      "js/moment.js",
+      "js/jquery-3.2.1.min.js",
+      "js/formatschedule.js",
+      "js/makehtml.js",
+      "js/script.js"
+    ]
   }],
   "background": {
     "matches": ["https://bozuman.cybozu.com/*"],
     "scripts": [
-      "jquery-3.2.1.min.js",
-      "background.js"
+      "js/jquery-3.2.1.min.js",
+      "js/background.js"
     ]
   },
+  "options_ui": {
+    "page": "options/options.html",
+    "chrome_style": true,
+    "open_in_tab": true
+  },
   "browser_action": {
-        "default_title": "action"
+    "default_title": "PostDailyReport",
+    "default_popup": "popup/popup.html"
   }
 }

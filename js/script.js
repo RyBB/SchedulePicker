@@ -35,7 +35,7 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
 			}
 			// スケジュールの挿入部分
 			if (request == "Today") {
-				ta.innerHTML = ta.lastChild.innerHTML + makehtml(schedule, type, today);
+				ta.innerHTML = ta.innerHTML + makehtml(schedule, type, today);
 			} else if (request == "Tomorrow") {
 				ta.innerHTML = ta.innerHTML + makehtml(schedule, type, tomorrow);
 			} else {

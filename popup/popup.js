@@ -8,7 +8,7 @@ function save_options() {
         select: selected_date
     }, function () {
         var status = document.getElementById('status');
-        status.textContent = 'Options Saved';
+        status.textContent = 'Saved';
         setTimeout(function () {
             status.textContent = '';
         }, 750);

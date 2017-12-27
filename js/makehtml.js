@@ -10,7 +10,7 @@ function makehtml(schedule, type, date) {
 			case "repeat":
 				{
 					if (element.public_type === "private") {
-						if (type === true) {
+						if (type === false) {
 							break;
 						}
 					}
@@ -33,7 +33,7 @@ function makehtml(schedule, type, date) {
 			case "normal":
 				{
 					if (element.public_type === "private") {
-						if (type === true) {
+						if (type === false) {
 							break;
 						}
 					}
